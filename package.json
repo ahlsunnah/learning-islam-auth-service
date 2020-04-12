@@ -1,0 +1,72 @@
+{
+  "name": "ahlsunnah-node-backend",
+  "version": "0.0.1",
+  "description": "Back end for ahlsunnah",
+  "engines": {
+    "node": ">=10.5.0"
+  },
+  "scripts": {
+    "clean": "rm -rf build/app && rm -rf dist",
+    "debug:inspect": "node --inspect -r ts-node/register src/server.ts",
+    "debug:inspect-production": "NODE_ENV=production node --inspect dist/server.js",
+    "debug:inspectr": "NODE_ENV=production DEBUG=app* ts-node --inspect dist/server.js",
+    "prettier:check": "prettier --check",
+    "prettier:format": "prettier --write",
+    "build": "yarn cache clean && tsc --project tsconfig.server.json",
+    "tsc:check": "tsc --noEmit",
+    "nodemon": "nodemon src/server.ts --exec ts-node",
+    "start": "ts-node --files src/server.ts",
+    "start:prod": "NODE_ENV=production node dist/server.js"
+  },
+  "author": "ahlsunnah-organization",
+  "license": "Apache-2.0",
+  "keywords": [
+    "fastify",
+    "node"
+  ],
+  "dependencies": {
+    "babel-runtime": "^6.26.0",
+    "debug": "^4.1.1",
+    "dotenv": "^8.2.0",
+    "fastify": "^2.10.0",
+    "fastify-circuit-breaker": "^0.1.0",
+    "fastify-env": "^1.0.1",
+    "fastify-plugin": "^1.6.0",
+    "fastify-swagger": "^2.4.0",
+    "firebase-admin": "^8.10.0",
+    "isomorphic-fetch": "^2.2.1",
+    "lodash": "^4.17.15",
+    "underscore.string": "^3.3.5",
+    "uuid": "^3.4.0"
+  },
+  "devDependencies": {
+    "@types/async": "^3.0.3",
+    "@types/debug": "^4.1.5",
+    "@types/lodash": "^4.14.145",
+    "@types/node": "^13.5.0",
+    "@types/uuid": "^3.4.6",
+    "@typescript-eslint/eslint-plugin": "^2.12.0",
+    "@typescript-eslint/parser": "^2.12.0",
+    "babel-eslint": "^10.0.3",
+    "babel-loader": "^8.0.6",
+    "babel-plugin-transform-define": "^2.0.0",
+    "babel-plugin-transform-export-extensions": "^6.22.0",
+    "eslint": "^5.16.0",
+    "eslint-config-airbnb": "^17.1.0",
+    "eslint-config-prettier": "^6.7.0",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-jsx-a11y": "^6.1.1",
+    "eslint-plugin-prettier": "^3.1.2",
+    "nodemon": "^1.18.4",
+    "prettier": "^1.18.2",
+    "ts-node": "^8.4.1",
+    "typescript": "^3.7.5"
+  },
+  "nodemonConfig": {
+    "delay": "10",
+    "verbose": false,
+    "watch": [
+      "src"
+    ]
+  }
+}

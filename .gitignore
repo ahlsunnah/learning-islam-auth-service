@@ -1,1 +1,8 @@
 .vscode
+
+.DS_Store
+.env
+.docker
+build/app
+logs
+node_modules
