@@ -11,6 +11,7 @@ admin.initializeApp({
 const fastifyInstence = fastify({ ignoreTrailingSlash: true, logger: true, caseSensitive: true });
 
 fastifyInstence.register(require('./routes/authentication'), { prefix: '/auth' });
+fastifyInstence.register(require('fastify-cookie'));
 
 const start = async () => {
   try {
