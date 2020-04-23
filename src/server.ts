@@ -3,6 +3,8 @@ require('dotenv').config();
 import fastify from 'fastify';
 import admin from 'firebase-admin';
 
+const API_BASE = 'api/v1';
+
 admin.initializeApp({
   credential: admin.credential.applicationDefault(),
   databaseURL: process.env.FIREBASE_DATABASE_URL,
@@ -10,7 +12,8 @@ admin.initializeApp({
 
 const fastifyInstence = fastify({ ignoreTrailingSlash: true, logger: true, caseSensitive: true });
 
-fastifyInstence.register(require('./routes/authentication'), { prefix: '/auth' });
+fastifyInstence.register(require('./routes/authentication'), { prefix: `${API_BASE}/auth` });
+fastifyInstence.register(require('./routes/ping'), { prefix: `${API_BASE}/ping` });
 fastifyInstence.register(require('fastify-cookie'));
 
 const start = async () => {

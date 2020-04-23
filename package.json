@@ -14,7 +14,7 @@
     "prettier:format": "prettier --write",
     "build": "yarn cache clean && tsc --project tsconfig.server.json",
     "tsc:check": "tsc --noEmit",
-    "nodemon": "nodemon src/server.ts --exec ts-node",
+    "nodemon": "nodemon src/server.ts --exec ts-node --files",
     "start": "ts-node --files src/server.ts",
     "start:prod": "NODE_ENV=production node dist/server.js"
   },
