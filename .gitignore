@@ -6,3 +6,5 @@
 build/app
 logs
 node_modules
+
+firebase.cert.json

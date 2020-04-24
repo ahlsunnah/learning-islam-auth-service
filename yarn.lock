@@ -1643,6 +1643,14 @@ fastify-cookie@^3.6.0:
     cookie-signature "^1.1.0"
     fastify-plugin "^1.4.0"
 
+fastify-cors@^3.0.3:
+  version "3.0.3"
+  resolved "https://registry.yarnpkg.com/fastify-cors/-/fastify-cors-3.0.3.tgz#c1b2227983d7b02feff73fd642d81041adfbe124"
+  integrity sha512-SDMa+GtyTTAU7pWZwY4fukb/VwCZ4c30p0oEaE7/d/+VCvceB1+NzW2udp2dSZZfWR7J1kUookCpw2dLmtAsSw==
+  dependencies:
+    fastify-plugin "^1.6.0"
+    vary "^1.1.2"
+
 fastify-env@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/fastify-env/-/fastify-env-1.0.1.tgz#9a752a94a3ef491dfffc1eaabc9fce97a580a3fc"
@@ -4274,6 +4282,11 @@ validate-npm-package-license@^3.0.1:
   dependencies:
     spdx-correct "^3.0.0"
     spdx-expression-parse "^3.0.0"
+
+vary@^1.1.2:
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/vary/-/vary-1.1.2.tgz#2299f02c6ded30d4a5961b0b9f74524a18f634fc"
+  integrity sha1-IpnwLG3tMNSllhsLn3RSShj2NPw=
 
 walkdir@^0.4.0:
   version "0.4.1"

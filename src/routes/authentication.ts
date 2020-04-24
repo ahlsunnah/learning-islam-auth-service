@@ -28,6 +28,11 @@ async function routes(fastify, options, next) {
     method: 'POST',
     url: '/sessionLogin',
     schema: {
+      body: {
+        idToken: {
+          type: 'string',
+        },
+      },
       response: {
         200: {
           type: 'object',
@@ -41,21 +46,24 @@ async function routes(fastify, options, next) {
       },
     },
     handler: async (req, res): Promise<void> => {
-      // Get the ID token passed and the CSRF token.
-
-      const idToken = req.body.idToken.toString();
-
-      const csrfToken = req.body.csrfToken.toString();
-      // Guard against CSRF attacks.
-      if (csrfToken !== req.cookies.csrfToken) {
-        res.code(401).send('UNAUTHORIZED REQUEST!');
-        return;
-      }
+      const idToken = req.body.idToken;
 
       // Set session expiration to 5 days.
       const expiresIn = 60 * 60 * 24 * 5 * 1000;
 
       try {
+        const claims = await admin.auth().verifyIdToken(idToken);
+
+        const additionalClaims: object = {
+          'https://hasura.io/jwt/claims': {
+            'x-hasura-default-role': 'user',
+            'x-hasura-allowed-roles': ['user'],
+            'x-hasura-user-id': claims.uid,
+          },
+        };
+
+        await admin.auth().setCustomUserClaims(claims.sub, additionalClaims);
+
         const sessionCookie = await admin.auth().createSessionCookie(idToken, { expiresIn });
 
         // Set cookie policy for session cookie
@@ -63,9 +71,10 @@ async function routes(fastify, options, next) {
           madAge: expiresIn,
           httpOnly: true,
           secure: true,
+          domain: 'localhost',
         };
 
-        res.setCookie('session', sessionCookie, options).send(JSON.stringify({ status: 'success' }));
+        res.setCookie('session', sessionCookie, options).send({ status: 'success' });
       } catch (error) {
         res.code(401).send('UNAUTHORIZED REQUEST!');
       }
@@ -74,49 +83,30 @@ async function routes(fastify, options, next) {
 
   fastify.route({
     method: 'POST',
-    url: '/setCustomClaims',
+    url: '/sessionLogout',
     schema: {
-      body: {
-        idToken: {
-          type: 'string',
-        },
-      },
       response: {
         200: {
           type: 'object',
           properties: {
-            status: {
-              type: 'string',
-            },
+            status: { type: 'string' },
           },
         },
         401: {
-          type: 'object',
-          properties: {
-            status: {
-              type: 'string',
-            },
-          },
+          type: 'string',
         },
       },
     },
-    handler: async (req, res) => {
-      const idToken = req.body.idToken;
-      const additionalClaims: object = {
-        'https://hasura.io/jwt/claims': {
-          'x-hasura-default-role': 'user',
-          'x-hasura-allowed-roles': ['user'],
-          'x-hasura-user-id': idToken,
-        },
-      };
-
+    handler: async (req, res): Promise<void> => {
       try {
-        const claims = await admin.auth().verifyIdToken(idToken);
-        await admin.auth().setCustomUserClaims(claims.sub, additionalClaims);
+        const sessionCookie = req.cookies.session || '';
+        res.clearCookie('session', options);
 
-        res.send({ status: 'custom claims have been set correctly' });
+        const decodedClaims = await admin.auth().verifySessionCookie(sessionCookie);
+
+        await admin.auth().revokeRefreshTokens(decodedClaims.sub);
       } catch (error) {
-        res.code(401).send({ status: 'unauthorized request' });
+        res.code(401).send('UNAUTHORIZED REQUEST!');
       }
     },
   });
