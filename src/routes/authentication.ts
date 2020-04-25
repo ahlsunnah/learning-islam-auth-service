@@ -71,12 +71,60 @@ async function routes(fastify, options, next) {
           madAge: expiresIn,
           httpOnly: true,
           secure: true,
-          domain: 'localhost',
         };
 
         res.setCookie('session', sessionCookie, options).send({ status: 'success' });
       } catch (error) {
         res.code(401).send('UNAUTHORIZED REQUEST!');
+      }
+    },
+  });
+
+  fastify.route({
+    method: 'POST',
+    url: '/setCustomClaims',
+    schema: {
+      body: {
+        idToken: {
+          type: 'string',
+        },
+      },
+      response: {
+        200: {
+          type: 'object',
+          properties: {
+            status: {
+              type: 'string',
+            },
+          },
+        },
+        401: {
+          type: 'object',
+          properties: {
+            status: {
+              type: 'string',
+            },
+          },
+        },
+      },
+    },
+    handler: async (req, res) => {
+      const idToken = req.body.idToken;
+      const additionalClaims: object = {
+        'https://hasura.io/jwt/claims': {
+          'x-hasura-default-role': 'user',
+          'x-hasura-allowed-roles': ['user'],
+          'x-hasura-user-id': idToken,
+        },
+      };
+
+      try {
+        const claims = await admin.auth().verifyIdToken(idToken);
+        await admin.auth().setCustomUserClaims(claims.sub, additionalClaims);
+
+        res.send({ status: 'custom claims have been set correctly' });
+      } catch (error) {
+        res.code(401).send({ status: 'unauthorized request' });
       }
     },
   });

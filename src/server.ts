@@ -16,6 +16,9 @@ const fastifyInstence = fastify({ ignoreTrailingSlash: true, logger: true, caseS
 fastifyInstence.register(require('fastify-cookie'));
 fastifyInstence.register(require('fastify-cors'), {
   'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,UPDATE,OPTIONS',
+  'Access-Control-Allow-Headers': 'X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept',
+  'Access-Control-Allow-Credentials': true,
 });
 
 // API Routes
