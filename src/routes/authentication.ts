@@ -85,7 +85,7 @@ async function routes(fastify, options, next) {
     url: '/setCustomClaims',
     schema: {
       body: {
-        idToken: {
+        uid: {
           type: 'string',
         },
       },
@@ -109,20 +109,18 @@ async function routes(fastify, options, next) {
       },
     },
     handler: async (req, res) => {
-      const idToken = req.body.idToken;
+      const uid = req.body.uid;
 
       try {
-        const claims = await admin.auth().verifyIdToken(idToken);
-
         const additionalClaims: object = {
           'https://hasura.io/jwt/claims': {
             'x-hasura-default-role': 'user',
             'x-hasura-allowed-roles': ['user'],
-            'x-hasura-user-id': claims.uid,
+            'x-hasura-user-id': uid,
           },
         };
 
-        await admin.auth().setCustomUserClaims(claims.sub, additionalClaims);
+        await admin.auth().setCustomUserClaims(uid, additionalClaims);
 
         res.send({ status: 'custom claims have been set correctly' });
       } catch (error) {
