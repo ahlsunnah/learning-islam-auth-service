@@ -24,7 +24,7 @@ fastifyInstence.register(require('./routes/ping'), { prefix: `${API_BASE}/ping` 
 
 const start = async () => {
   try {
-    await fastifyInstence.listen(5000);
+    await fastifyInstence.listen(process.env.PORT);
   } catch (err) {
     fastifyInstence.log.error(err);
     process.exit(1);
