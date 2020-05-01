@@ -4,7 +4,7 @@
   "description": "Back end for ahlsunnah",
   "engines": {
     "node": ">=13.9.0",
-    "yarn": "1.19.2"
+    "yarn": ">=1.22.4"
   },
   "scripts": {
     "clean": "yarn cache clean && rm -rf dist",
