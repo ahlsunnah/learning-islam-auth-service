@@ -5,6 +5,8 @@ import admin from 'firebase-admin';
 
 const API_BASE = 'api/v1';
 
+const SERVER_PORT: number = parseInt(process.env.PORT) || 5000;
+
 admin.initializeApp();
 
 const fastifyInstence = fastify({ ignoreTrailingSlash: true, logger: true, caseSensitive: true });
@@ -24,7 +26,7 @@ fastifyInstence.register(require('./routes/ping'), { prefix: `${API_BASE}/ping` 
 
 const start = async () => {
   try {
-    await fastifyInstence.listen(process.env.PORT);
+    await fastifyInstence.listen(SERVER_PORT, '0.0.0.0');
   } catch (err) {
     fastifyInstence.log.error(err);
     process.exit(1);
