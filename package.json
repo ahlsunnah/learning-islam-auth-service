@@ -12,7 +12,7 @@
     "debug:inspectr": "NODE_ENV=production DEBUG=app* ts-node --inspect dist/server.js",
     "prettier:check": "prettier --check",
     "prettier:format": "prettier --write",
-    "build": "yarn cache clean && tsc --project tsconfig.server.json",
+    "build": "yarn cache clean && tsc -b",
     "tsc:check": "tsc --noEmit",
     "nodemon": "nodemon src/server.ts --exec ts-node --files",
     "start": "ts-node --files src/server.ts",
