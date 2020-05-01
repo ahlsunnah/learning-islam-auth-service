@@ -5,10 +5,7 @@ import admin from 'firebase-admin';
 
 const API_BASE = 'api/v1';
 
-admin.initializeApp({
-  credential: admin.credential.cert(require('../firebase.cert.json')),
-  databaseURL: process.env.FIREBASE_DATABASE_URL,
-});
+admin.initializeApp();
 
 const fastifyInstence = fastify({ ignoreTrailingSlash: true, logger: true, caseSensitive: true });
 
