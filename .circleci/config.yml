@@ -12,6 +12,9 @@ jobs:
             - run: yarn install
             - run: yarn build
   deploy:
+    branches:
+      only:
+        - master
     steps:
       - run:
         name: Add dokku remote to git
@@ -24,9 +27,4 @@ workflows:
   build-deploy:
     jobs:
       - build
-      - deploy:
-        requires:
-          - build
-        filters:
-          branches:
-            only: master
+      - deploy
