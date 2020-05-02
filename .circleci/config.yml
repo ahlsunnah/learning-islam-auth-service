@@ -22,8 +22,8 @@ jobs:
       - run:
         name: Deploy to remote server
         command: git push dokku master
-
 workflows:
+  version: 2
   build-deploy:
     jobs:
       - build
