@@ -1,4 +1,4 @@
-version: 2
+version: 2.1
 orbs:
   node: circleci/node@1.1.6
 jobs:
@@ -7,23 +7,24 @@ jobs:
       name: node/default
     steps:
       - checkout
-      - run: yarn install
-      - run: yarn build
+      - node/with-cache:
+          steps:
+            - run: yarn install
+            - run: yarn build
   deploy:
     steps:
       - checkout
-      - run:
-          name: Add dokku remote to git
-          command: git remote add dokku dokku@172.105.84.80:learn-islam-backend
-      - run:
-          name: Deploy to remote server
-          command: git push dokku master
+      - run: git remote add dokku dokku@172.105.84.80:learn-islam-backend
+      - run: git push dokku master
 workflows:
-  version: 2
-  build-deploy:
-    jobs:
-      - build
-      - deploy:
-          filters:
-            branches:
-              only: master
+    version: 2
+    build-deploy:
+      jobs:
+        - build
+        - deploy:
+            requires:
+              - build
+            filters:
+              branches:
+                only: master
+
