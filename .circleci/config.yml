@@ -7,9 +7,9 @@ jobs:
       name: node/default
     steps:
       - checkout
-        steps:
-          - run: yarn install
-          - run: yarn build
+      steps:
+        - run: yarn install
+        - run: yarn build
   deploy:
     steps:
       - checkout
