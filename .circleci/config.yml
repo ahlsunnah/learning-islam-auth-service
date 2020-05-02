@@ -12,12 +12,21 @@ jobs:
             - run: yarn install
             - run: yarn build
   deploy:
-    production:
-      branch: master
-      commands:
-        - git remote add dokku dokku@172.105.84.80:learn-islam-backend
-        - git push dokku master
+    steps:
+      - run:
+        name: Add dokku remote to git
+        command: git remote add dokku dokku@172.105.84.80:learn-islam-backend
+      - run:
+        name: Deploy to remote server
+        command: git push dokku master
+
 workflows:
-  build:
+  build-deploy:
     jobs:
       - build
+      - deploy:
+        requires:
+          - build
+        filters:
+          branches:
+            only: master
