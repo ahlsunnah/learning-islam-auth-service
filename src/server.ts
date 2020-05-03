@@ -1,18 +1,19 @@
 require('dotenv').config();
 
 import fastify from 'fastify';
+import cookie from 'fastify-cookie';
 import admin from 'firebase-admin';
 
 const API_BASE = 'api/v1';
 
-const SERVER_PORT: number = parseInt(process.env.PORT) || 5000;
+const SERVER_PORT = parseInt(process.env.PORT) || 5000;
 
 admin.initializeApp();
 
 const fastifyInstence = fastify({ ignoreTrailingSlash: true, logger: true, caseSensitive: true });
 
 // Plugins
-fastifyInstence.register(require('fastify-cookie'));
+fastifyInstence.register(cookie);
 fastifyInstence.register(require('fastify-cors'), {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,UPDATE,OPTIONS',

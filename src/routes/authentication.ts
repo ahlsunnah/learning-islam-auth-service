@@ -1,8 +1,10 @@
 import uuidv4 from 'uuid/v4';
+import { FastifyInstance, RouteOptions } from 'fastify';
 import admin from 'firebase-admin';
+import isAuthorizedUser from '../hooks/isAuth';
 import { createCustomToken } from '../utils/firebase';
 
-async function routes(fastify, options, next) {
+async function routes(fastify: FastifyInstance, options: RouteOptions, next: any) {
   fastify.route({
     method: 'GET',
     url: '/token',
@@ -13,6 +15,7 @@ async function routes(fastify, options, next) {
         },
       },
     },
+    onRequest: isAuthorizedUser,
     handler: async (req, res): Promise<void> => {
       try {
         const token: string = await createCustomToken(uuidv4());
@@ -45,6 +48,7 @@ async function routes(fastify, options, next) {
         },
       },
     },
+    onRequest: isAuthorizedUser,
     handler: async (req, res): Promise<void> => {
       const idToken = req.body.idToken;
 
@@ -108,6 +112,7 @@ async function routes(fastify, options, next) {
         },
       },
     },
+    onRequest: isAuthorizedUser,
     handler: async (req, res) => {
       const uid = req.body.uid;
 
@@ -145,10 +150,11 @@ async function routes(fastify, options, next) {
         },
       },
     },
+    onRequest: isAuthorizedUser,
     handler: async (req, res): Promise<void> => {
       try {
         const sessionCookie = req.cookies.session || '';
-        res.clearCookie('session', options);
+        res.clearCookie('session');
 
         const decodedClaims = await admin.auth().verifySessionCookie(sessionCookie);
 
