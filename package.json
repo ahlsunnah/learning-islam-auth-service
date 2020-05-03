@@ -16,7 +16,7 @@
     "build": "yarn clean && tsc -b",
     "tsc:check": "tsc --noEmit",
     "nodemon": "nodemon src/server.ts --exec ts-node --files",
-    "start:dev": "source .env && ts-node --files src/server.ts",
+    "start:dev": "source .env && yarn nodemon",
     "start": "NODE_ENV=production node dist/server.js"
   },
   "author": "ahlsunnah-organization",
@@ -35,7 +35,7 @@
     "fastify-cors": "^3.0.3",
     "fastify-env": "^1.0.1",
     "fastify-plugin": "^1.6.0",
-    "fastify-swagger": "^2.4.0",
+    "fastify-swagger": "^2.5.1",
     "firebase-admin": "^8.10.0",
     "isomorphic-fetch": "^2.2.1",
     "lodash": "^4.17.15",

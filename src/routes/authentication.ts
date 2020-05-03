@@ -4,11 +4,14 @@ import admin from 'firebase-admin';
 import isAuthorizedUser from '../hooks/isAuth';
 import { createCustomToken } from '../utils/firebase';
 
+const ROUTE_TAGS = ['authentication'];
+
 async function routes(fastify: FastifyInstance, options: RouteOptions, next: any) {
   fastify.route({
     method: 'GET',
     url: '/token',
     schema: {
+      tags: ROUTE_TAGS,
       response: {
         200: {
           type: 'string',
@@ -31,6 +34,7 @@ async function routes(fastify: FastifyInstance, options: RouteOptions, next: any
     method: 'POST',
     url: '/sessionLogin',
     schema: {
+      tags: ROUTE_TAGS,
       body: {
         idToken: {
           type: 'string',
@@ -88,6 +92,7 @@ async function routes(fastify: FastifyInstance, options: RouteOptions, next: any
     method: 'POST',
     url: '/setCustomClaims',
     schema: {
+      tags: ROUTE_TAGS,
       body: {
         uid: {
           type: 'string',
@@ -138,6 +143,7 @@ async function routes(fastify: FastifyInstance, options: RouteOptions, next: any
     method: 'POST',
     url: '/sessionLogout',
     schema: {
+      tags: ROUTE_TAGS,
       response: {
         200: {
           type: 'object',
