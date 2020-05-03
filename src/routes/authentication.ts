@@ -1,18 +1,24 @@
 import uuidv4 from 'uuid/v4';
+import { FastifyInstance, RouteOptions } from 'fastify';
 import admin from 'firebase-admin';
+import isAuthorizedUser from '../hooks/isAuth';
 import { createCustomToken } from '../utils/firebase';
 
-async function routes(fastify, options, next) {
+const ROUTE_TAGS = ['authentication'];
+
+async function routes(fastify: FastifyInstance, options: RouteOptions, next: any) {
   fastify.route({
     method: 'GET',
     url: '/token',
     schema: {
+      tags: ROUTE_TAGS,
       response: {
         200: {
           type: 'string',
         },
       },
     },
+    onRequest: isAuthorizedUser,
     handler: async (req, res): Promise<void> => {
       try {
         const token: string = await createCustomToken(uuidv4());
@@ -28,6 +34,7 @@ async function routes(fastify, options, next) {
     method: 'POST',
     url: '/sessionLogin',
     schema: {
+      tags: ROUTE_TAGS,
       body: {
         idToken: {
           type: 'string',
@@ -45,6 +52,7 @@ async function routes(fastify, options, next) {
         },
       },
     },
+    onRequest: isAuthorizedUser,
     handler: async (req, res): Promise<void> => {
       const idToken = req.body.idToken;
 
@@ -84,6 +92,7 @@ async function routes(fastify, options, next) {
     method: 'POST',
     url: '/setCustomClaims',
     schema: {
+      tags: ROUTE_TAGS,
       body: {
         uid: {
           type: 'string',
@@ -108,6 +117,7 @@ async function routes(fastify, options, next) {
         },
       },
     },
+    onRequest: isAuthorizedUser,
     handler: async (req, res) => {
       const uid = req.body.uid;
 
@@ -133,6 +143,7 @@ async function routes(fastify, options, next) {
     method: 'POST',
     url: '/sessionLogout',
     schema: {
+      tags: ROUTE_TAGS,
       response: {
         200: {
           type: 'object',
@@ -145,10 +156,11 @@ async function routes(fastify, options, next) {
         },
       },
     },
+    onRequest: isAuthorizedUser,
     handler: async (req, res): Promise<void> => {
       try {
         const sessionCookie = req.cookies.session || '';
-        res.clearCookie('session', options);
+        res.clearCookie('session');
 
         const decodedClaims = await admin.auth().verifySessionCookie(sessionCookie);
 

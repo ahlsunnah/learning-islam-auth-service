@@ -36,11 +36,19 @@ export async function createCustomToken(uid: string): Promise<string> {
   }
 }
 
-export async function isAuth(req) {
+export async function isAuthWithCookie(req) {
   const sessionCookie = _.get(req, 'cookie.session', '');
   try {
     const claims = await admin.auth().verifySessionCookie(sessionCookie, true);
     return claims;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export async function isFirebaseAuth(idToken: string) {
+  try {
+    return admin.auth().verifyIdToken(idToken);
   } catch (error) {
     throw error;
   }
