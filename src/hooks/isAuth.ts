@@ -12,13 +12,14 @@ export default async function isAuthorizedUser(
 ): Promise<void> {
   const { headers } = request;
 
-  const userIdToken = _.get(headers, 'Authorization');
+  const userIdToken = _.get(headers, 'authorization');
 
   if (!userIdToken) replay.code(401).send({ status: 'Unauthorized request' });
 
   try {
-    await isFirebaseAuth(userIdToken);
+    await isFirebaseAuth(userIdToken.split(' ')[1]);
   } catch (error) {
+    request.log.info('isAuthorizedUser error :', error);
     replay.code(401).send({ status: 'Unauthorized request' });
   }
 }

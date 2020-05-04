@@ -16,7 +16,6 @@
     "build": "yarn clean && tsc -b",
     "tsc:check": "tsc --noEmit",
     "nodemon": "nodemon src/server.ts --exec ts-node --files",
-    "start:dev": "source .env && yarn nodemon",
     "start": "NODE_ENV=production node dist/server.js"
   },
   "author": "ahlsunnah-organization",
