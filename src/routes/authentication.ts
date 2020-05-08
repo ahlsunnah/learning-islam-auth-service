@@ -90,11 +90,14 @@ async function routes(fastify: FastifyInstance, options: RouteOptions, next: any
 
   fastify.route({
     method: 'POST',
-    url: '/setCustomClaims',
+    url: '/addNewUser',
     schema: {
       tags: ROUTE_TAGS,
       body: {
-        uid: {
+        email: {
+          type: 'string',
+        },
+        password: {
           type: 'string',
         },
       },
@@ -117,20 +120,25 @@ async function routes(fastify: FastifyInstance, options: RouteOptions, next: any
         },
       },
     },
-    onRequest: isAuthorizedUser,
     handler: async (req, res) => {
-      const uid = req.body.uid;
+      const email = req.body.email;
+      const password = req.body.password;
+
+      const user = await admin.auth().createUser({
+        email,
+        password,
+      });
 
       try {
         const additionalClaims: object = {
           'https://hasura.io/jwt/claims': {
             'x-hasura-default-role': 'user',
             'x-hasura-allowed-roles': ['user'],
-            'x-hasura-user-id': uid,
+            'x-hasura-user-id': user.uid,
           },
         };
 
-        await admin.auth().setCustomUserClaims(uid, additionalClaims);
+        await admin.auth().setCustomUserClaims(user.uid, additionalClaims);
 
         res.send({ status: 'custom claims have been set correctly' });
       } catch (error) {
