@@ -3,6 +3,8 @@ orbs:
   node: circleci/node@1.1.6
 jobs:
   build:
+    branches:
+      ignore: master
     executor:
       name: node/default
     steps:
@@ -11,7 +13,20 @@ jobs:
           steps:
             - run: yarn install
             - run: yarn build
+
+  deploy:
+    branches:
+      only: master
+    executor:
+      name: shell
+    commands:
+      - git remote add dokku dokku@172.105.84.80:learn-islam-backend
+      - git push dokku master
+
 workflows:
     build:
       jobs:
         - build
+    deploy:
+      jobs:
+        - deploy
