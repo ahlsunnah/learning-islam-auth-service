@@ -3,8 +3,6 @@ orbs:
   node: circleci/node@1.1.6
 jobs:
   build:
-    branches:
-      ignore: master
     executor:
       name: node/default
     steps:
@@ -15,8 +13,6 @@ jobs:
             - run: yarn build
 
   deploy:
-    branches:
-      only: master
     executor:
       name: shell
     commands:
@@ -26,7 +22,13 @@ jobs:
 workflows:
     build:
       jobs:
-        - build
+        - build:
+            filters:
+              branches:
+                ignore: master
     deploy:
       jobs:
-        - deploy
+        - deploy:
+            filters:
+              branches:
+                only: master
