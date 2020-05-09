@@ -18,7 +18,7 @@ jobs:
     steps:
       - checkout
       - run: git remote add dokku dokku@172.105.84.80:learn-islam-backend
-      - run: push dokku master
+      - run: git push dokku master
 
 workflows:
     build:
