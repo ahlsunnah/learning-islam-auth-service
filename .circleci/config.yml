@@ -13,8 +13,8 @@ jobs:
             - run: yarn build
 
   deploy:
-    executor:
-      name: shell
+    machine: # executor type
+      image: ubuntu-1604:201903-01
     steps:
       - run: git remote add dokku dokku@172.105.84.80:learn-islam-backend
       - run: push dokku master
