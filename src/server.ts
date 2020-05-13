@@ -15,18 +15,18 @@ admin.initializeApp({
   credential: admin.credential.applicationDefault(),
 });
 
-const fastifyInstence = fastify({ ignoreTrailingSlash: true, logger: true, caseSensitive: true });
+const fastifyInstance = fastify({ ignoreTrailingSlash: true, logger: true, caseSensitive: true });
 
 // Plugins
-fastifyInstence.register(cookie);
-fastifyInstence.register(require('fastify-cors'), {
+fastifyInstance.register(cookie);
+fastifyInstance.register(require('fastify-cors'), {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,UPDATE,OPTIONS',
   'Access-Control-Allow-Headers': 'Authorization, X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept',
   'Access-Control-Allow-Credentials': true,
 });
 
-fastifyInstence.register(swagger, {
+fastifyInstance.register(swagger, {
   routePrefix: SWAGGER_ROUTE,
   swagger: {
     info: {
@@ -65,14 +65,14 @@ fastifyInstence.register(swagger, {
 });
 
 // API Routes
-fastifyInstence.register(require('./routes/authentication'), { prefix: `${API_BASE}/auth` });
-fastifyInstence.register(require('./routes/ping'), { prefix: `${API_BASE}/ping` });
+fastifyInstance.register(require('./routes/authentication'), { prefix: `${API_BASE}/auth` });
+fastifyInstance.register(require('./routes/ping'), { prefix: `${API_BASE}/ping` });
 
 const start = async () => {
   try {
-    await fastifyInstence.listen(SERVER_PORT, '0.0.0.0');
+    await fastifyInstance.listen(SERVER_PORT, '0.0.0.0');
   } catch (err) {
-    fastifyInstence.log.error(err);
+    fastifyInstance.log.error(err);
     process.exit(1);
   }
 };
