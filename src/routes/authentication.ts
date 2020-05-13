@@ -16,6 +16,9 @@ async function routes(fastify: FastifyInstance, options: RouteOptions, next: any
         200: {
           type: 'string',
         },
+        401: {
+          type: 'string',
+        },
       },
     },
     onRequest: isAuthorizedUser,
