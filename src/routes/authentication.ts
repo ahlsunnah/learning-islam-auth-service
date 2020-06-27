@@ -1,17 +1,21 @@
-import uuidv4 from 'uuid/v4';
 import { FastifyInstance, RouteOptions } from 'fastify';
 import admin from 'firebase-admin';
 import isAuthorizedUser from '../hooks/isAuth';
-import { createCustomToken } from '../utils/firebase';
+import isAdmin from '../hooks/isAdmin';
 
 const ROUTE_TAGS = ['authentication'];
 
 async function routes(fastify: FastifyInstance, options: RouteOptions, next: any) {
   fastify.route({
-    method: 'GET',
+    method: 'POST',
     url: '/token',
     schema: {
       tags: ROUTE_TAGS,
+      body: {
+        email: {
+          type: 'string',
+        },
+      },
       response: {
         200: {
           type: 'string',
@@ -21,10 +25,10 @@ async function routes(fastify: FastifyInstance, options: RouteOptions, next: any
         },
       },
     },
-    onRequest: isAuthorizedUser,
-    handler: async (req, res): Promise<void> => {
+    onRequest: isAdmin,
+    handler: (req, res): void => {
       try {
-        const token: string = await createCustomToken(uuidv4());
+        const token: string = process.env.ADMIN_TOKEN;
 
         res.code(200).send(token);
       } catch (error) {
